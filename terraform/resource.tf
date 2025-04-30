@@ -45,12 +45,12 @@ resource "google_container_cluster" "cluster" {
   }
 }
 
-module "workload_identity" {
-  source               = "../modules/workload_id_setup"
-  create_k8s_resources = false
-  project_id           = var.project_id
-  service_account_map  = local.workload_identity_service_accounts
-}
+# module "workload_identity" {
+#   source               = "../modules/workload_id_setup"
+#   create_k8s_resources = false
+#   project_id           = var.project_id
+#   service_account_map  = local.workload_identity_service_accounts
+# }
 
 # ArgoCD Specific workload identity bootstrapping.
 # Instead of there being just one service account in the k8s deployment there are many so our current module won't work.
@@ -119,6 +119,61 @@ resource "kubernetes_secret_v1" "cluster" {
   depends_on = [helm_release.argocd]
 }
 
+locals {
+  roles = flatten([
+    for sa in local.workload_identity_service_accounts : [
+      for role in sa.roles : {
+        service_account = sa.name
+        namespace       = coalesce(sa.namespace, sa.name)
+        role            = role.name
+        project         = try(role.project, null)
+      }
+    ]
+  ])
+  service_accounts = { for sa in local.workload_identity_service_accounts : sa.name => sa }
+}
+
+resource "google_service_account" "gcp_service_account" {
+  for_each     = local.service_accounts
+  account_id   = each.key
+  display_name = "${each.key} Service Account"
+  project      = var.project_id
+}
+
+resource "kubernetes_namespace" "namespace" {
+
+  provider = kubernetes.gke
+
+  for_each = local.service_accounts
+  metadata {
+    name = coalesce(each.value.namespace, each.key)
+  }
+  lifecycle {
+    ignore_changes = all
+  }
+}
+
+resource "kubernetes_service_account" "kubernetes_service_account" {
+
+  provider = kubernetes.gke
+
+  depends_on = [ google_service_account.gcp_service_account ]
+  for_each   = local.service_accounts
+  metadata {
+    name      = each.key
+    namespace = coalesce(each.value.namespace, each.key)
+    annotations = {
+      "iam.gke.io/gcp-service-account" = google_service_account.gcp_service_account[each.key].email
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      metadata[0].labels
+     ]
+  }
+}
+
 resource "helm_release" "bootstrap" {
 
   provider = helm.gke 
@@ -139,6 +194,7 @@ resource "helm_release" "bootstrap" {
 
   depends_on = [kubernetes_secret_v1.cluster]
 }
+
 
 # module "gitops_bridge_bootstrap" {
 #   source = "../modules/helm_gitops_bridge"

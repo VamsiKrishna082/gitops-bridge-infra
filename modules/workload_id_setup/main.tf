@@ -20,6 +20,7 @@ resource "google_service_account" "gcp_service_account" {
 }
 
 resource "kubernetes_namespace" "namespace" {
+
   for_each = var.create_k8s_resources ? local.service_accounts : {}
   metadata {
     name = coalesce(each.value.namespace, each.key)
@@ -30,6 +31,7 @@ resource "kubernetes_namespace" "namespace" {
 }
 
 resource "kubernetes_service_account" "kubernetes_service_account" {
+
   depends_on = [ google_service_account.gcp_service_account ]
   for_each   = var.create_k8s_resources ? local.service_accounts : {}
   metadata {

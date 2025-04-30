@@ -23,12 +23,6 @@ spec:
           directory:
             recurse: true
             exclude: properties.yaml
-        - repoURL: https://github.com/VamsiKrishna082/gitops-bridge-infra.git
-          targetRevision: main
-          path: "{{path2}}"
-          directory:
-            recurse: true
-            exclude: properties.yaml
       destination:
         server: "{{url}}"
         namespace: "backstage"

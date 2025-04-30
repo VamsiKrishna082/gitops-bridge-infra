@@ -19,7 +19,7 @@ locals {
     )
     gke_k8s_version = "1.30.10-gke.1070000"
 
-    wl_id_service_account_emails = { for name, sa in module.workload_identity.gcp_service_accounts : "${replace(name, "-", "_")}_sa" => sa.email }
+    # wl_id_service_account_emails = { for name, sa in module.workload_identity.gcp_service_accounts : "${replace(name, "-", "_")}_sa" => sa.email }
 
     cluster_sa_roles = {
         "roles/container.admin"         = "Container Admin"
@@ -51,7 +51,7 @@ locals {
             addons_name          = "addons-repo"
             addons_repo_basepath = ""
         },
-        local.wl_id_service_account_emails
+        # local.wl_id_service_account_emails
     )
     
 

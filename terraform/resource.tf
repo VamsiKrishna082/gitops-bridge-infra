@@ -174,6 +174,22 @@ resource "kubernetes_service_account" "kubernetes_service_account" {
   }
 }
 
+resource "google_service_account_iam_binding" "workload_identity" {
+  for_each           = local.service_accounts
+  service_account_id = google_service_account.gcp_service_account[each.key].name
+  role               = "roles/iam.workloadIdentityUser"
+  members            = ["serviceAccount:${var.project_id}.svc.id.goog[${coalesce(each.value.namespace, each.value.name)}/${each.value.name}]"]
+}
+
+
+
+resource "google_project_iam_member" "identity_permissions" {
+  for_each = { for role in local.roles : "${coalesce(role.project, var.project_id)}-${role.service_account}-${role.role}" => role }
+  project  = coalesce(each.value.project, var.project_id)
+  role     = each.value.role
+  member   = "serviceAccount:${google_service_account.gcp_service_account[each.value.service_account].email}"
+}
+
 resource "helm_release" "bootstrap" {
 
   provider = helm.gke 

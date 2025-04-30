@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-argo
+  annotations:
+    kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.allow-http: "true"
+    cert-manager.io/cluster-issuer: argo-issuer
+    external-dns.alpha.kubernetes.io/hostname: argocd.ioinfo.shop
+  namespace: argocd
+spec:
+  tls:
+  - hosts:
+      - argocd.ioinfo.shop
+    secretName: secret-argo
+  rules:
+  - host: argocd.ioinfo.shop
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argo-cd-argocd-server
+            port:
+              number: 80

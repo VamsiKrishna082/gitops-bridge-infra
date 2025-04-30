@@ -1,0 +1,32 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: argo-appset
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: local-argo
+            url: https://kubernetes.default.svc
+            path1: manifests/argo-manifests
+  template:
+    metadata:
+      name: "{{cluster}}-argo-application"
+    spec:
+      project: default
+      sources:
+        - repoURL: https://github.com/VamsiKrishna082/gitops-bridge-infra.git
+          targetRevision: main
+          path: "{{path1}}"
+          directory:
+            recurse: true
+            exclude: properties.yaml
+      destination:
+        server: "{{url}}"
+        namespace: "argocd"
+      syncPolicy:
+        automated: {}
+        syncOptions:
+          - CreateNamespace=true

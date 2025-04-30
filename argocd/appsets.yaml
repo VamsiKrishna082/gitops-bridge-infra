@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cluster-applications
+  namespace: argocd
+spec:
+  generators:
+    - clusters:
+        selector:
+          matchExpressions:
+            - key: akuity.io/argo-cd-cluster-name
+              operator: NotIn
+              values: [in-cluster]
+  template:
+    metadata:
+      name: cluster-applications
+    spec:
+      project: default
+      source:
+        repoURL: 'https://github.com/VamsiKrishna082/gitops-bridge-infra'
+        path: 'app-appsets'
+        targetRevision: 'main'
+        directory:
+          recurse: true
+          exclude: exclude/*
+      destination:
+        namespace: '*'
+        name: '{{name}}'
+      syncPolicy:
+        automated: {}

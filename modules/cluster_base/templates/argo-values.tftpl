@@ -1,0 +1,94 @@
+global:
+  domain: argocd.tensure.cloud
+
+crds:
+  keep: true
+
+controller:
+  replicas: 1
+
+repoServer:
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+
+applicationSet:
+  replicas: 2
+
+configs:
+  cm:
+    dexserver.disable.tls: "true"
+    server.insecure: "true"
+    create: true
+    admin.enabled: true
+    url: https://argocd.tensure.cloud
+    dex.config: |
+      connectors:
+        - type: google
+          id: google
+          name: Google
+          config:
+            clientID: $argo-cd-secrets:client_id
+            clientSecret: $argo-cd-secrets:client_secret
+            redirectURI: https://argocd.tensure.cloud/api/dex/callback
+  params:
+    server.insecure: "true"
+    server.dex.server: http://argocd-dex-server:5556
+    dexserver.disable.tls: "true"
+    server.dex.server.strict.tls: "false"
+  rbac:
+    create: true
+    policy.default: 'role:readonly'
+    scopes: "[groups, email]"
+    policy.matchMode: "glob"
+    policy.csv: |
+      p, role:admin, applications, *, *, allow
+      p, role:admin, clusters, *, *, allow
+      p, role:admin, repositories, *, *, allow
+      p, role:admin, projects, *, *, allow
+      p, role:admin, accounts, *, *, allow
+      g, joe@tensure.io, role:admin
+      g, sam.mello@tensure.io, role:admin
+      g, james.dreier@tensure.io, role:admin
+
+  secret:
+    argocdServerAdminPassword: ${argo_admin_password}
+
+server:
+  service:
+    annotations:
+      cloud.google.com/neg: '{"ingress": true}'
+      cloud.google.com/backend-config: '{"ports": {"http":"argocd-server"}}'
+  # certificate:
+  #   enabled: true
+  #   secretName: argocd-server-tls
+  #   domain: argocd.mydomain.com
+  #   issuer:
+  #     group: cert-manager.io
+  #     kind: ClusterIssuer
+  #     name: letsencrypt-prod
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+  ingress:
+    enabled: true
+    controller: gke
+    gke:
+      backendConfig:
+        healthCheck:
+          checkIntervalSec: 30
+          timeoutSec: 5
+          healthyThreshold: 1
+          unhealthyThreashold: 2
+          type: HTTP
+          requestPath: /healthz
+          port: 8080
+        iap:
+          enabled: true
+          oauthclientCredentials:
+            secretName: argo-cd-secrets
+      frontEndConfig:
+        redirectToHttps:
+          enabled: true
+      managedCertificate:
+        enabled: true

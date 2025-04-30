@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: backstage-issuer
+  namespace: argocd
+spec:
+  acme:
+    # The ACME server URL
+    server: https://acme-v02.api.letsencrypt.org/directory 
+    # Email address used for ACME registration
+    email: vamsi.krishna@tensure.io
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: backstage-issuer
+    # Enable the HTTP-01 challenge provider
+    solvers:
+    - dns01:
+        cloudDNS:
+          project: vamsi-krishna-sandbox

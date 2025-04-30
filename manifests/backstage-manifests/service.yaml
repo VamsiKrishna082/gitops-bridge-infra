@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backstage-app-service
+  namespace: backstage
+spec:
+  selector:
+    app: backstage-app
+  ports:
+    - protocol: 'TCP'
+      port: 80
+      targetPort: 8080
+  type: NodePort

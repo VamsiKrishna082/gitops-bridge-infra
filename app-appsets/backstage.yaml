@@ -10,20 +10,20 @@ spec:
         elements:
           - cluster: backstage
             url: https://kubernetes.default.svc
-            path1: manifests/apps-of-apps/app-1-manifest/
+            path1: manifests/backstage-manifests
   template:
     metadata:
       name: "{{cluster}}-application"
     spec:
       project: default
       sources:
-        - repoURL: https://github.com/Tensure/td-cert-manager-app-config.git
+        - repoURL: https://github.com/VamsiKrishna082/gitops-bridge-infra.git
           targetRevision: main
           path: "{{path1}}"
           directory:
             recurse: true
             exclude: properties.yaml
-        - repoURL: https://github.com/Tensure/td-cert-manager-app-config.git
+        - repoURL: https://github.com/VamsiKrishna082/gitops-bridge-infra.git
           targetRevision: main
           path: "{{path2}}"
           directory:
@@ -31,7 +31,7 @@ spec:
             exclude: properties.yaml
       destination:
         server: "{{url}}"
-        namespace: "tensure"
+        namespace: "backstage"
       syncPolicy:
         automated: {}
         syncOptions:

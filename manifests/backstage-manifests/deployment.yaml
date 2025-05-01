@@ -15,4 +15,4 @@ spec:
     spec:
       containers:
         - name: backstage-node
-          image: vamc08/backstage:latest
+          image: us-central1-docker.pkg.dev/vamsi-krishna-sandbox/backstage/backstage:latest

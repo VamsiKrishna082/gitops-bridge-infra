@@ -3,7 +3,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: backstage-app-appset
-  namespace: backstage
+  namespace: argocd
 spec:
   generators:
     - list:

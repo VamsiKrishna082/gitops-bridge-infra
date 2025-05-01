@@ -16,3 +16,4 @@ spec:
       containers:
         - name: backstage-node
           image: us-central1-docker.pkg.dev/vamsi-krishna-sandbox/backstage/backstage:latest
+          imagePullPolicy: Always

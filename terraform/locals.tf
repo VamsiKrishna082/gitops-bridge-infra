@@ -6,6 +6,7 @@ locals {
         enable_argocd  = true
         enable_cert_manager = true
         enable_external_dns = true
+        enable_external_secrets = true
     }
 
     prefix = "vamsi-krishna-sandbox"
@@ -43,6 +44,7 @@ locals {
             cert_manager_namespace      = "cert-manager"
             external_dns_domain_filters = "ioinfo.shop"
             external_dns_namespace      = "external-dns"
+            external_secrets_namespace = "external-secrets"
             managed-by           = "argocd.argoproj.io"
             argocd_namespace     = "argocd"
             addons_repo_url      = "https://github.com/VamsiKrishna082/gitops-bridge-automation.git"
@@ -84,6 +86,15 @@ locals {
             roles = [
                 {
                     name = "roles/dns.admin"
+                }
+            ]
+        },
+        {
+            name      = "external-secrets"
+            namespace = "external-secrets"
+            roles = [
+                {
+                    name = "roles/secretmanager.secretAccessor"
                 }
             ]
         }

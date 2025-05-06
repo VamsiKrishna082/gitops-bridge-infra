@@ -52,6 +52,12 @@ locals {
             addons_repo_revision = "main"
             addons_name          = "addons-repo"
             addons_repo_basepath = ""
+            workloads_name          = "workloads-repo"
+            # workloads_repo_name     = var.gitops_config.workloads.repo
+            workloads_repo_url      = "https://github.com/VamsiKrishna082/gitops-bridge-automation.git"
+            workloads_repo_basepath = ""
+            workloads_repo_path     = "bootstrap/control-plane/workloads"
+            workloads_repo_revision = "main"
         },
         # local.wl_id_service_account_emails
     )
@@ -68,6 +74,7 @@ locals {
 
     argocd_apps = {
         addons = file("../bootstrap/addons.yaml")
+        workloads = file("../bootstrap/workloads.yaml")
     }
 
     workload_identity_service_accounts = [

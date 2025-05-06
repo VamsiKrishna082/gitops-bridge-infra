@@ -19,7 +19,6 @@ variable "region" {
 
 variable "google_oauth_client_id" {
     description = "Google Oauth id"
-    default = "131024917947-g5ngacsht283gdiv5au14cs8c2htl0r5.apps.googleusercontent.com"
 }
 
 variable "google_oauth_client_secret" {
@@ -28,7 +27,18 @@ variable "google_oauth_client_secret" {
 
 variable "backstage_auth_secret" {
   description = "backstage backend secret"
-  default = "BCNHCu7pLQ91SKaNwhSa0zEODmSlIKve" # randomstring
+}
+
+variable "backstage_db_password" {
+    description = "backstage user db password"
+}
+
+variable "backstage_github_key" {
+  description = "PAT For sample testing"
+}
+
+variable "cloud_sql_ip" {
+    description = "ip address of postgress db instance"
 }
 
 variable "postgres" {

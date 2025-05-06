@@ -5,6 +5,9 @@ locals {
     "${local.prefix}-postgres-instance"          = random_password.postgres_password.result
     "${local.prefix}-oauth-client-id"            = var.google_oauth_client_id
     "${local.prefix}-oauth-client-secret"        = var.google_oauth_client_secret
+    "${local.prefix}-backstage-db-password"      = var.backstage_db_password
+    "${local.prefix}-backstage-github-key"       = var.backstage_github_key
+    "${local.prefix}-cloud-sql-ip"               = var.cloud_sql_ip
     # "${local.prefix}-github-app-client-id"       = var.github_app_client_id
     # "${local.prefix}-github-app-client-secret"   = var.github_app_client_secret
     # "${local.prefix}-github-app-id"              = var.github_app_id

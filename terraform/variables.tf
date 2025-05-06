@@ -26,6 +26,11 @@ variable "google_oauth_client_secret" {
   description = "Google Oauth secret"
 }
 
+variable "backstage_auth_secret" {
+  description = "backstage backend secret"
+  default = "BCNHCu7pLQ91SKaNwhSa0zEODmSlIKve" # randomstring
+}
+
 variable "postgres" {
   description = "Configuration for Postgres"
   type = object({

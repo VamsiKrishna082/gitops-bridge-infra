@@ -1,7 +1,7 @@
 #backstage sa
 locals {
   backstage_secrets = {
-    # "${local.prefix}-backstage-auth"             = var.backstage_auth_secret
+    "${local.prefix}-backstage-auth"             = var.backstage_auth_secret
     "${local.prefix}-postgres-instance"          = random_password.postgres_password.result
     "${local.prefix}-oauth-client-id"            = var.google_oauth_client_id
     "${local.prefix}-oauth-client-secret"        = var.google_oauth_client_secret

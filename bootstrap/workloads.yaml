@@ -27,6 +27,7 @@ spec:
         targetRevision: '{{metadata.annotations.workloads_repo_revision}}'
         directory:
           recurse: true
+          exclude: exclude/*
       destination:
         namespace: argocd
         name: '{{name}}'

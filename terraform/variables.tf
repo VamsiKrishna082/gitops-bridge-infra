@@ -41,6 +41,40 @@ variable "cloud_sql_ip" {
     description = "ip address of postgress db instance"
 }
 
+variable "github_client_id" {
+    description = "github client id"
+}
+
+variable "github_client_secret" {
+    description = "github client secret"
+}
+
+variable "argocd_host_name" {
+    description = "argocd host name"
+}
+
+variable "grafana_host_name" {
+    description = "grafana host name"
+}
+
+variable "argocd_token" {
+    description = "argocd auth token"
+}
+
+variable "grafana_token" {
+    description = "grafana auth token"
+}
+
+variable "techdocs_gcs_bucket" {
+    description = "techdocs gcs bucket"
+}
+
+variable "backstage_host_name" {
+    description = "backstage host name"
+}
+
+
+
 variable "postgres" {
   description = "Configuration for Postgres"
   type = object({

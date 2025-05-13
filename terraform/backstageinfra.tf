@@ -8,6 +8,14 @@ locals {
     "${local.prefix}-backstage-db-password"      = var.backstage_db_password
     "${local.prefix}-backstage-github-key"       = var.backstage_github_key
     "${local.prefix}-cloud-sql-ip"               = var.cloud_sql_ip
+    "github_client_id" = var.github_client_id
+    "github_client_secret" = var.github_client_secret
+    "argocd_host_name" = var.argocd_host_name
+    "argocd_token" = var.argocd_token
+    "grafana_host_name" = var.grafana_host_name
+    "grafana_token" = var.grafana_token
+    "backstage_host_name" = var.backstage_host_name
+    "techdocs_gcs_bucket" = var.techdocs_gcs_bucket
     # "${local.prefix}-github-app-client-id"       = var.github_app_client_id
     # "${local.prefix}-github-app-client-secret"   = var.github_app_client_secret
     # "${local.prefix}-github-app-id"              = var.github_app_id
